@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Log In</title>
+		<link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">
+		<link rel="shortcut icon" href="favicon.ico">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+
+
+	<style>
+		:root
+        {
+            --color-1:              #9AADBF;
+            --color-2:              #6D98BA;
+            --color-3:              #D3B99F50;
+            --color-4:              #C17767;
+            --color-5:              #210203;
+            --color-5-a:            #21020390
+        }
+
+        *
+        {
+            box-sizing:             border-box;
+            font-family:            "Staatliches";
+        }
+
+        body
+        {
+            margin:                 0;
+            background-color:       var(--color-3);
+        }
+
+        #pageTitle
+        {
+            font-size:              3em;
+            height:                 10vh;
+            padding-left:           8vw;
+        }
+
+        .header
+        {
+            background-color:       var(--color-1);
+            color:                  var(--color-5);
+            height:                 10vh;
+            border-bottom:          6px solid var(--color-5);
+        }
+
+
+        .menu
+        {
+            font-size:              1.5em;
+            padding-top:            3vh;
+            height:                 10vh;
+            text-align:             center;
+            background-color:       var(--color-5);
+            color:                  var(--color-1);
+        }
+
+        .menu:hover
+        {
+            background-color:       var(--color-5-a);
+            color:                  var(--color-4);
+            cursor:                 pointer;
+        }
+
+
+
+        table
+        {
+            text-align:             center;
+        }
+
+        th
+        {
+            font-size:              1.2em;
+            color:                  var(--color-5);
+        }
+
+        tr
+        {
+            height:                 10vh;
+        }
+
+
+        form 
+        {
+        	font-size: 				1.5em;
+        }
+
+        input[type="button"] 
+        {
+            width:                  15vw;
+            height:                 6vh;
+            background-color:       var(--color-5);
+            color:                  var(--color-1);
+            font-size:              1.1em;
+            border-radius: 			10px;
+        }
+
+        input[type="button"]:hover
+        {
+            background-color:       var(--color-5-a);
+            color:                  var(--color-4);
+            cursor:                 pointer;
+        }
+
+        input[type="text"]
+        {
+        	height: 				4vh;
+        	padding-top: 			2vh;
+        }
+
+        input[type="password"]
+        {
+        	height: 				4vh;
+        	padding-top: 			2vh;
+        }
+
+
+        .col-01 {width: 8.33%;}
+        .col-02 {width: 16.66%;}
+        .col-03 {width: 25%;}
+        .col-04 {width: 33.33%;}
+        .col-05 {width: 41.66%;}
+        .col-06 {width: 50%;}
+        .col-07 {width: 58.33%;}
+        .col-08 {width: 66.66%;}
+        .col-09 {width: 75%;}
+        .col-10 {width: 83.33%;}
+        .col-11 {width: 91.66%;}
+        .col-12 {width: 100%;}
+
+        [class*="col-"]
+        {
+            float:                  left;
+            /*padding:              15px;*/
+            border:                 1px solid rgba(1,1,1,0);
+        }
+
+        .row::after
+        {
+            content:                "";
+            clear:                  both;
+            display:                table;
+        }
+
+	</style>
+
+
+	<body>
+
+		<div class="row header">
+			<div class="col-12" id="pageTitle">
+				Log In
+			</div>
+
+		</div>
+        
+
+		<div class="row">
+			<div class="col-01"></div>
+
+			<div class="col-11">
+                <form id="logInForm">
+
+                    <br><br>
+                    <label>username</label>
+                    &nbsp
+                    <input type="text" id="usernameTextbox" size="30">
+                    <br><br><br>
+                    <label>password</label>
+                    &nbsp
+                    <input type="password" id="passwordTextbox" size="30">
+                    <br><br><br>
+                    <input type="radio" name="type" id="emp" value="0"> Employee<br><br>
+                    <input type="radio" name="type" id="man" value="1"> Manager<br><br><br>
+                    <input type="button" id="loginButton" value="Log In!" onclick="pass()">
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <h1 style="display:inline;">Or</h1>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" id="createAccountButton" value="Create Account" onclick="changeForm()">
+                </form>
+			</div>
+		</div>
+
+
+
+		<script type="text/javascript">
+
+			function pass(){
+                var username = document.getElementById("usernameTextbox").value;
+
+                //Set session storage for username in order to pass to landing.html
+                sessionStorage.setItem("username", username);
+
+                var password = document.getElementById("passwordTextbox").value;
+                if (document.getElementById("emp").checked) {
+                    LogOnEmployee(username, password);
+                } else if (document.getElementById("man").checked) {
+                    LogOnManager(username, password);
+                }
+
+
+            
+
+			}
+
+		
+            function LogOnEmployee(userId, pass) {
+                //the url of the webservice we will be talking to
+                var webMethod = "WebService1.asmx/LogOnEmployee";
+                //the parameters we will pass the service (in json format because curly braces)
+                //note we encode the values for transmission over the web.  All the \'s are just
+                //because we want to wrap our keynames and values in double quotes so we have to
+                //escape the double quotes (because the overall string we're creating is in double quotes!)
+                var parameters = "{\"uid\":\"" + encodeURI(userId) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
+
+                //jQuery ajax method
+                $.ajax({
+                    //post is more secure than get, and allows
+                    //us to send big data if we want.  really just
+                    //depends on the way the service you're talking to is set up, though
+                    type: "POST",
+                    //the url is set to the string we created above
+                    url: webMethod,
+                    //same with the data
+                    data: parameters,
+                    //these next two key/value pairs say we intend to talk in JSON format
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    //jQuery sends the data and asynchronously waits for a response.  when it
+                    //gets a response, it calls the function mapped to the success key here
+                    success: function (msg) {
+                        //the server response is in the msg object passed in to the function here
+                        //since our logon web method simply returns a true/false, that value is mapped
+                        //to a generic property of the server response called d (I assume short for data
+                        //but honestly I don't know...)
+                        if (msg.d) {
+                            //server replied true, so show the accounts panel
+                            openLanding();
+                        }
+                        else {
+                            //server replied false, so let the user know
+                            //the logon failed
+                            alert("logon failed");
+                        }
+                    },
+                    error: function (e) {
+                        //if something goes wrong in the mechanics of delivering the
+                        //message to the server or the server processing that message,
+                        //then this function mapped to the error key is executed rather
+                        //than the one mapped to the success key.  This is just a garbage
+                        //alert becaue I'm lazy
+                        alert("boo...");
+                    }
+                });
+            }
+            function LogOnManager(userId, pass) {
+                //the url of the webservice we will be talking to
+                var webMethod = "WebService1.asmx/LogOnManager";
+                //the parameters we will pass the service (in json format because curly braces)
+                //note we encode the values for transmission over the web.  All the \'s are just
+                //because we want to wrap our keynames and values in double quotes so we have to
+                //escape the double quotes (because the overall string we're creating is in double quotes!)
+                var parameters = "{\"uid\":\"" + encodeURI(userId) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
+
+                //jQuery ajax method
+                $.ajax({
+                    //post is more secure than get, and allows
+                    //us to send big data if we want.  really just
+                    //depends on the way the service you're talking to is set up, though
+                    type: "POST",
+                    //the url is set to the string we created above
+                    url: webMethod,
+                    //same with the data
+                    data: parameters,
+                    //these next two key/value pairs say we intend to talk in JSON format
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    //jQuery sends the data and asynchronously waits for a response.  when it
+                    //gets a response, it calls the function mapped to the success key here
+                    success: function (msg) {
+                        //the server response is in the msg object passed in to the function here
+                        //since our logon web method simply returns a true/false, that value is mapped
+                        //to a generic property of the server response called d (I assume short for data
+                        //but honestly I don't know...)
+                        if (msg.d) {
+                            //server replied true, so show the accounts panel
+                            openAdmin();
+                        }
+                        else {
+                            //server replied false, so let the user know
+                            //the logon failed
+                            alert("logon failed");
+                        }
+                    },
+                    error: function (e) {
+                        //if something goes wrong in the mechanics of delivering the
+                        //message to the server or the server processing that message,
+                        //then this function mapped to the error key is executed rather
+                        //than the one mapped to the success key.  This is just a garbage
+                        //alert becaue I'm lazy
+                        alert("boo...");
+                    }
+                });
+            }
+
+            function openLanding() {
+                window.location.replace("landing.html");
+            }
+
+            function openAdmin() {
+                window.location.replace("admin.html");
+            }
+            function changeForm() {
+                window.location.replace("createAccount.html");
+            }
+
+		</script>
+	</body>
+</html>

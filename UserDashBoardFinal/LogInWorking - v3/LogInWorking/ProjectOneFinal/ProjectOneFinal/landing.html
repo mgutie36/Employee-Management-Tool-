@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Log Hours</title>
+
+</head>
+
+<style>
+    :root {
+        --color-1: #9AADBF;
+        --color-2: #6D98BA;
+        --color-3: #D3B99F50;
+        --color-4: #C17767;
+        --color-5: #210203;
+        --color-5-a: #21020390
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: "Staatliches";
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--color-3);
+    }
+
+    #pageTitle {
+        font-size: 3em;
+        height: 10vh;
+        padding-left: 8vw;
+    }
+
+    .header {
+        background-color: var(--color-1);
+        color: var(--color-5);
+        height: 10vh;
+        border-bottom: 6px solid var(--color-5);
+    }
+
+
+    .menu {
+        font-size: 1.5em;
+        padding-top: 3vh;
+        height: 10vh;
+        text-align: center;
+        background-color: var(--color-5);
+        color: var(--color-1);
+    }
+
+        .menu:hover {
+            background-color: var(--color-5-a);
+            color: var(--color-4);
+            cursor: pointer;
+        }
+
+    #nameLabel {
+        font-size: 1.5em;
+        padding-top: 3vh;
+        height: 10vh;
+        text-align: center;
+        background-color: var(--color-1);
+        color: var(--color-5);
+        border-bottom: 6px solid var(--color-5);
+    }
+
+
+
+
+    table {
+        text-align: center;
+    }
+
+    #historyTableId {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    th {
+        font-size: 1.2em;
+        color: var(--color-5);
+    }
+
+    tr {
+        height: 10vh;
+    }
+
+    button {
+        height: 20vh;
+        width: 40vw;
+        font-size: 3em;
+        border-radius: 4vw;
+        background-color: var(--color-5);
+        color: var(--color-1);
+    }
+
+        button:hover {
+            background-color: var(--color-5-a);
+            color: var(--color-4);
+            cursor: pointer;
+        }
+
+
+    #spacerDiv {
+        height: 10vh;
+    }
+
+    .col-01 {
+        width: 8.33%;
+    }
+
+    .col-02 {
+        width: 16.66%;
+    }
+
+    .col-03 {
+        width: 25%;
+    }
+
+    .col-04 {
+        width: 33.33%;
+    }
+
+    .col-05 {
+        width: 41.66%;
+    }
+
+    .col-06 {
+        width: 50%;
+    }
+
+    .col-07 {
+        width: 58.33%;
+    }
+
+    .col-08 {
+        width: 66.66%;
+    }
+
+    .col-09 {
+        width: 75%;
+    }
+
+    .col-10 {
+        width: 83.33%;
+    }
+
+    .col-11 {
+        width: 91.66%;
+    }
+
+    .col-12 {
+        width: 100%;
+    }
+
+    [class*="col-"] {
+        float: left;
+        border: 1px solid rgba(1,1,1,0);
+    }
+
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+<body>
+
+
+    <div class="row header">
+        <div class="col-08" id="pageTitle">
+            Clock In and Out
+        </div>
+
+        <div class="col-02" id="nameLabel">
+            Profile
+        </div>
+
+        <a href="login.html">
+            <div class="col-02 menu">
+                Logout
+            </div>
+        </a>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12" id="spacerDiv"></div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-01"></div>
+
+        <div class="col-05">
+            <button id="clockIn" onclick="clockInButtonClick()">
+                Clock In
+            </button><br /><br /><br /><br />
+            <button id="clockOut" onclick="clockOutButtonClick()">
+                Clock Out
+            </button>
+        </div>
+
+        <div class="col-01"></div>
+
+        <div class="col-05">
+            <table id="historyTableId">
+
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                </tr>
+
+
+            </table>
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+
+        $(document)
+        {
+            generateHistory();
+
+            
+        }
+
+        // clockStatus 0 = currently clocked out
+        // clockStatus 1 = currently clocked in
+        var clockStatus = 0;
+
+
+
+        function clockInButtonClick() {
+            //Get timeIn
+            var d = new Date();
+            var year = d.getFullYear();
+            var months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+            var month = months[d.getMonth()];
+            var day = d.getDate();
+            var hour = d.getHours();
+            var minutes = d.getMinutes();
+            var seconds = d.getSeconds();
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            var timeIn = year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            //Store timeIn in sessionStorage
+            sessionStorage.setItem("timeIn", timeIn);
+
+            var timeOut = "0000-00-00 00:00:00";
+            var employeeUserName = sessionStorage.username;
+
+            alert(timeIn);
+            // send clock in information to DB
+            var webMethod = "WebService1.asmx/SendClockIn";
+            var parameters = "{\"employeeUserName\":\"" + encodeURI(employeeUserName) + "\",\"timeIn\":\"" + encodeURI(timeIn) + "\",\"timeOut\":\"" + encodeURI(timeOut) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("request accepted");
+                    var button = Document.getElementById("clockOut");
+                    button.enabled = false; 
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }
+
+
+        function clockOutButtonClick() {
+            //Get timeOut
+            var d = new Date();
+            var year = d.getFullYear();
+            var months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+            var month = months[d.getMonth()];
+            var day = d.getDate();
+            var hour = d.getHours();
+            var minutes = d.getMinutes();
+            var seconds = d.getSeconds();
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            var timeOut = year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            var userName = sessionStorage.username;
+
+            // send clock out information to DB
+            var webMethod = "WebService1.asmx/SendClockOut";
+            var parameters = "{\"userName\":\"" + encodeURI(userName) + "\",\"timeOut\":\"" + encodeURI(timeOut) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("request accepted");
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+            generateHistory();
+            
+        }
+
+        function generateHistory() {
+            $(".userNameRow").remove();
+            console.log("Loading account: " + sessionStorage.userName);
+            var employeeUserName = sessionStorage.username;
+            $("#nameLabel").html(employeeUserName);
+            var webMethod = "WebService1.asmx/GetHistory";
+            var parameters = "{\"userName\":\"" + encodeURI(employeeUserName) + "\"}";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                   if (msg.d.length > 0) {
+
+                        historyArray = msg.d;
+                        $("#historyTableId td").empty();
+
+                        for (var i = 0; i < historyArray.length; i++) {
+                            var history;
+
+                            history = "<tr class=\"userNameRow\" id=\"userName" + historyArray[i].employeeUserName + "\"> <td>" +
+                                historyArray[i].employeeUserName + "</td><td>" +
+                                historyArray[i].timeIn + "</td><td>" + historyArray[i].timeOut + "</tr>"
+
+                            $("#historyTableId").append(
+
+                                history
+                            );
+                        }
+                        console.log("account requests successfully loaded");
+                    }
+
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+            
+        }
+
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Create Account</title>
+        <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">
+        <link rel="shortcut icon" href="favicon.ico">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+
+    <style>
+        
+                :root
+        {
+            --color-1:              #9AADBF;
+            --color-2:              #6D98BA;
+            --color-3:              #D3B99F50;
+            --color-4:              #C17767;
+            --color-5:              #210203;
+            --color-5-a:            #21020390
+        }
+
+        *
+        {
+            box-sizing:             border-box;
+            font-family:            "Staatliches";
+        }
+
+        body
+        {
+            margin:                 0;
+            background-color:       var(--color-3);
+        }
+
+        #pageTitle
+        {
+            font-size:              3em;
+            height:                 10vh;
+            padding-left:           8vw;
+        }
+
+        .header
+        {
+            background-color:       var(--color-1);
+            color:                  var(--color-5);
+            height:                 10vh;
+            border-bottom:          6px solid var(--color-5);
+        }
+
+
+        .menu
+        {
+            font-size:              1.5em;
+            padding-top:            3vh;
+            height:                 10vh;
+            text-align:             center;
+            background-color:       var(--color-5);
+            color:                  var(--color-1);
+        }
+
+        .menu:hover
+        {
+            background-color:       var(--color-5-a);
+            color:                  var(--color-4);
+            cursor:                 pointer;
+        }
+
+
+
+        table
+        {
+            text-align:             center;
+        }
+
+        th
+        {
+            font-size:              1.2em;
+            color:                  var(--color-5);
+        }
+
+        tr
+        {
+            height:                 10vh;
+        }
+
+
+        form 
+        {
+            font-size:              1.5em;
+        }
+
+        input[type="button"] 
+        {
+            width:                  15vw;
+            height:                 6vh;
+            background-color:       var(--color-5);
+            color:                  var(--color-1);
+            font-size:              1.1em;
+            border-radius:          10px;
+        }
+
+        input[type="button"]:hover
+        {
+            background-color:       var(--color-5-a);
+            color:                  var(--color-4);
+            cursor:                 pointer;
+        }
+
+        input[type="text"]
+        {
+            height:                 4vh;
+            padding-top:            2vh;
+        }
+
+        input[type="password"]
+        {
+            height:                 4vh;
+            padding-top:            2vh;
+        }
+
+
+        .col-01 {width: 8.33%;}
+        .col-02 {width: 16.66%;}
+        .col-03 {width: 25%;}
+        .col-04 {width: 33.33%;}
+        .col-05 {width: 41.66%;}
+        .col-06 {width: 50%;}
+        .col-07 {width: 58.33%;}
+        .col-08 {width: 66.66%;}
+        .col-09 {width: 75%;}
+        .col-10 {width: 83.33%;}
+        .col-11 {width: 91.66%;}
+        .col-12 {width: 100%;}
+
+        [class*="col-"]
+        {
+            float:                  left;
+            border:                 1px solid rgba(1,1,1,0);
+        }
+
+        .row::after
+        {
+            content:                "";
+            clear:                  both;
+            display:                table;
+        }
+
+        select
+        {
+            font-size:              1.15em;
+        }
+
+
+
+    </style>
+
+
+
+
+	<body>
+
+        <div class="row header">
+            <div class="col-10" id="pageTitle">
+                Create Account
+            </div>
+
+            <a href="login.html">
+                <div class="menu col-02">
+                    Back to Log In
+                </div>
+            </a>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-01"></div>
+
+        <div class="col-11">
+            <form id="createAccountForm">
+                <h1>Your Information</h1>
+                <label>username</label>
+                &nbsp
+                <input type="text" id="usernameTextbox" size="30">
+                <br><br><br>
+                <label>password</label>
+                &nbsp
+                <input type="password" id="passwordTextbox" size="30">
+                <br><br><br>
+                <label>First Name</label>
+                &nbsp
+                <input type="text" id="firstNameTextbox" size="30">
+                <br><br><br>
+                <label>Last Name</label>
+                &nbsp
+                <input type="text" id="lastNameTextbox" size="30">
+                <br><br><br>
+                <select id="jobType">
+                    <option value="0">Employee</option>
+                    <option value="1">Manager</option>
+                </select>
+                <br><br>
+                <input type="button" id="createAccountButton" value="Create Account" onclick="validateForm()">
+            </form>
+        </div>
+
+		<script type="text/javascript">
+
+            function validateForm() {
+                var username;
+                var password;
+                var firstName;
+                var lastName;
+                var jobType;
+
+                user = document.getElementById("usernameTextbox").value;
+                pass = document.getElementById("passwordTextbox").value;
+                firstName = document.getElementById("firstNameTextbox").value;
+                lastName = document.getElementById("lastNameTextbox").value;
+                type = document.getElementById("jobType").value;
+
+                CreateAccount(user, pass, firstName, lastName, type);
+            }
+
+            //passes account info to the server, to create an account request
+            function CreateAccount(user, pass, firstName, lastName, type) {
+                var webMethod = "WebService1.asmx/RequestAccount";
+                var parameters = "{\"user\":\"" + encodeURI(user) + "\",\"pass\":\"" + encodeURI(pass) + "\",\"firstName\":\"" + encodeURI(firstName) + "\",\"lastName\":\"" + encodeURI(lastName) + "\",\"type\":\"" + encodeURI(type) + "\"}";
+
+                $.ajax({
+                    type: "POST",
+                    url: webMethod,
+                    data: parameters,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        alert("Account request pending approval...");
+                    },
+                    error: function (e) {
+                        alert("boo...");
+                    }
+                });
+
+                document.getElementById("usernameTextbox").value = "";
+                document.getElementById("passwordTextbox").value = "";
+                document.getElementById("firstNameTextbox").value = "";
+                document.getElementById("lastNameTextbox").value = "";
+                document.getElementById("jobType").value = "";
+            }
+
+               
+				
+		</script>
+	</body>
+</html>

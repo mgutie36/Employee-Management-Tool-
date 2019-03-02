@@ -1,0 +1,517 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+        :root {
+            --color-1: #9AADBF;
+            --color-2: #6D98BA;
+            --color-3: #D3B99F50;
+            --color-4: #C17767;
+            --color-5: #210203;
+            --color-5-a: #21020390
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Staatliches";
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--color-3);
+        }
+
+        #pageTitle {
+            font-size: 3em;
+            height: 10vh;
+            padding-left: 8vw;
+        }
+
+        .header {
+            background-color: var(--color-1);
+            color: var(--color-5);
+            height: 10vh;
+            border-bottom: 6px solid var(--color-5);
+        }
+
+
+        .menu {
+            font-size: 1.5em;
+            padding-top: 3vh;
+            height: 10vh;
+            text-align: center;
+            background-color: var(--color-5);
+            color: var(--color-1);
+        }
+
+            .menu:hover {
+                background-color: var(--color-5-a);
+                color: var(--color-4);
+                cursor: pointer;
+            }
+
+
+
+        table {
+            text-align: center;
+            border: 5px solid var(--color-5-a);
+            border-radius: 5px;
+        }
+
+        th {
+            font-size: 1.2em;
+            color: var(--color-4);
+        }
+
+        tr {
+            height: 10vh;
+        }
+
+        th, td {
+            padding: 1vw;
+        }
+
+        #spacerDiv {
+            height: 3vh;
+            background-color: var(--color-1);
+            margin-top: 4vh;
+            margin-bottom: 4vh;
+            border-top: 2px solid var(--color-5);
+            border-bottom: 2px solid var(--color-5);
+        }
+
+
+
+
+        .col-01 {
+            width: 8.33%;
+        }
+
+        .col-02 {
+            width: 16.66%;
+        }
+
+        .col-03 {
+            width: 25%;
+        }
+
+        .col-04 {
+            width: 33.33%;
+        }
+
+        .col-05 {
+            width: 41.66%;
+        }
+
+        .col-06 {
+            width: 50%;
+        }
+
+        .col-07 {
+            width: 58.33%;
+        }
+
+        .col-08 {
+            width: 66.66%;
+        }
+
+        .col-09 {
+            width: 75%;
+        }
+
+        .col-10 {
+            width: 83.33%;
+        }
+
+        .col-11 {
+            width: 91.66%;
+        }
+
+        .col-12 {
+            width: 100%;
+        }
+
+        [class*="col-"] {
+            float: left;
+            /*padding:              15px;*/
+            border: 1px solid rgba(1,1,1,0);
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--color-5);
+        }
+
+        button {
+            width: 5vw;
+            height: 4vh;
+            background-color: var(--color-5);
+            color: var(--color-1);
+            font-size: 1.1em;
+            border-radius: 10px;
+        }
+
+        button:hover {
+            background-color: var(--color-5-a);
+            color: var(--color-4);
+            cursor: pointer;
+        }
+
+
+        a{
+            text-decoration: none;
+            color: var(--color-4);
+
+        }
+
+        a:hover{
+            color: var(--color-5);
+            cursor:pointer;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function initialize() {
+
+            LoadEmployees();
+            LoadRequests();
+            LoadTime();
+
+            alert("Administrator Page Loaded")
+
+        }
+
+        function LoadEmployees() {
+
+            var webMethod = "WebService1.asmx/GetAccounts";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d.length > 0) {
+
+                        accountsArray = msg.d;
+                        $(".employeesTableClass td").empty();
+
+                        admin = false;
+                        for (var i = 0; i < accountsArray.length; i++) {
+                            var acct;
+
+                            acct = "<tr class='accountRow' id='acct" + accountsArray[i].userName + "'> <td>" +
+                                accountsArray[i].firstName + " " + accountsArray[i].lastName + "</td><td>" + accountsArray[i].userName +
+                                "</td><td><a onClick=\"generateHistory(\'" + accountsArray[i].userName + "\')\">View</a></td> </tr>"
+
+                            $("#employeesTableID").append(
+
+                                acct
+                            );
+                        }
+
+                        console.log("accounts successfully loaded");
+                    }
+
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+        }
+
+        function viewAccount(userNameX) {
+            sessionStorage.userName = userNameX;
+            console.log(userName);
+        }
+
+        function ApproveAccount(userName) {
+            var webMethod = "WebService1.asmx/ActivateAccount";
+            var parameters = "{\"userName\":\"" + encodeURI(userName) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("request accepted");
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+            location.reload();
+        }
+
+        function RejectAccount(userName) {
+            var webMethod = "WebService1.asmx/RejectAccount";
+            var parameters = "{\"userName\":\"" + encodeURI(userName) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    LoadRequests();
+                    alert("request accepted");
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+            location.reload();
+        }
+
+
+        function LoadRequests() {
+
+            var webMethod = "WebService1.asmx/GetAccountRequests";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d.length > 0) {
+
+                        requestsArray = msg.d;
+                        $("#requestsTableID td").empty();
+
+                        admin = false;
+                        for (var i = 0; i < requestsArray.length; i++) {
+                            var acct;
+
+                            acct = "<tr class=\"accountRow\" id=\"acct" + requestsArray[i].userName + "\"> <td>" +
+                                requestsArray[i].firstName + " " + requestsArray[i].lastName + "</td><td><button id=\"yes.button.acct" +
+                                requestsArray[i].userName + "\" onclick=\"ApproveAccount('" + requestsArray[i].userName + "')\">Yes</td><td><button id=\"no.button.acct" +
+                                requestsArray[i].userName + "\" onclick=\"RejectAccount('" + requestsArray[i].userName + "')\">No</td> </tr>"
+
+                            $("#requestsTableID").append(
+
+                                acct
+                            );
+                        }
+                        console.log("account requests successfully loaded");
+                    }
+
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+        }
+
+        function LoadTime() {
+            var webMethod = "WebService1.asmx/GetTime";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d.length > 0) {
+
+                        accountsArray = msg.d;
+                        $("#employeeTimeTableID td").empty();
+
+                        admin = false;
+                        for (var i = 0; i < accountsArray.length; i++) {
+                            var acct;
+
+                            acct = "<tr class='timeClockRow' id='acct" + accountsArray[i].userName + "'> <td>" +
+                                accountsArray[i].firstName + " " + accountsArray[i].lastName + "</td><td>" + accountsArray[i].hoursWorked + "</td> </tr>"
+
+                            $("#employeeTimeTableID").append(
+
+                                acct
+                            );
+                        }
+
+                        console.log("employee time successfully loaded");
+                    }
+
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }
+
+
+        function generateHistory(userNameX) {
+            $(".userNameRow").remove();
+            console.log("Loading account: " + userNameX);
+            var employeeUserName = userNameX;
+            var webMethod = "WebService1.asmx/GetHistory";
+            var parameters = "{\"userName\":\"" + encodeURI(employeeUserName) + "\"}";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d.length > 0) {
+
+                        historyArray = msg.d;
+                        $("#historyTableId td").empty();
+
+                        for (var i = 0; i < historyArray.length; i++) {
+                            var history;
+
+                            history = "<tr class=\"userNameRow\" id=\"userName" + historyArray[i].employeeUserName + "\"> <td>" +
+                                historyArray[i].employeeUserName + "</td><td>" +
+                                historyArray[i].timeIn + "</td><td>" + historyArray[i].timeOut + "</tr>"
+
+                            $("#historyTableId").append(
+
+                                history
+                            );
+                        }
+                        console.log("account requests successfully loaded");
+                    }
+
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+
+            console.log(sessionStorage.userName);
+        }
+
+
+
+    </script>
+
+</head>
+<body onload="initialize()">
+
+    <div class="row header">
+        <div class="col-10" id="pageTitle">
+            Admin Page
+        </div>
+
+
+
+        <a href="login.html">
+            <div class="col-02 menu">
+                Logout
+            </div>
+        </a>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-01"></div>
+        <div class="col-03">
+            <h2>View Users</h2>
+        </div>
+        <div class="col-01"></div>
+        <div class="col-03">
+            <h2>Approve Users</h2>
+        </div>
+        <div class="col-01"></div>
+        <div class="col-03">
+            <h2>Clocking History</h2>
+        </div>
+
+        <!--
+    <div class="col-01"></div>
+    <div class="col-03">
+        <h2>View Time</h2>
+    </div>
+        -->
+
+    </div>
+
+
+    <div id="employeesTableDiv">
+
+
+        <div class="row">
+
+            <div class="col-01"></div>
+            <div class="col-03">
+                <table id="employeesTableID" class="employeesTableClass">
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Employee Username</th>
+                    </tr>
+
+                </table>
+            </div>
+
+
+            <div class="col-01" id=""></div>
+
+
+
+            <div id="requestsDiv" class="col-03">
+
+                <table id="requestsTableID">
+
+                    <tr>
+                        <th>Employee Name</th>
+                        <th colspan="2">Accept Request?</th>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class="col-01"></div>
+            <div class="col-03">
+                <table id="historyTableId">
+
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                    </tr>
+
+                </table>
+            </div>
+
+        </div>
+
+     </div>
+
+
+
+
+
+
+    <div class="row">
+        <div class="col-12" id="spacerDiv"></div>
+    </div>
+
+
+
+
+</body>
+</html>

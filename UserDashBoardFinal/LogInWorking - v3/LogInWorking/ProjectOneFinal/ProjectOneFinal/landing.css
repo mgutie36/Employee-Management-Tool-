@@ -1,0 +1,104 @@
+:root
+{
+	--color-1:  			#9AADBF;
+	--color-2: 				#6D98BA;
+	--color-3: 				#D3B99F50;
+	--color-4: 				#C17767;
+	--color-5: 				#210203;
+	--color-5-a: 			#21020390}
+
+*
+{
+	box-sizing: 			border-box;
+  	font-family: 			"Staatliches";
+}
+
+body
+{
+	margin: 				0;
+	background-color: 		var(--color-3);
+}
+
+#pageTitle
+{
+	font-size: 				3em;
+	height: 				10vh;
+	padding-left: 			8vw;
+}
+
+.header
+{
+	background-color: 		var(--color-1);
+	color: 					var(--color-5);
+	height: 				10vh;
+}
+
+
+.menu
+{
+	font-size: 				1.5em;
+	padding-top: 			5vh;
+	height: 				10vh;
+	text-align: 			center;
+	background-color: 		var(--color-5);
+	color: 					var(--color-1);
+}
+
+.menu:hover
+{
+	background-color: 		var(--color-5-a);
+	color: 					var(--color-4);
+	cursor: 				pointer;
+}
+
+
+
+table
+{
+	text-align: 			center;
+}
+
+th
+{
+	font-size: 				1.2em;
+	color: 					var(--color-5);
+}
+
+tr
+{
+	height: 				10vh;
+}
+
+
+.col-01 {width: 8.33%;}
+.col-02 {width: 16.66%;}
+.col-03 {width: 25%;}
+.col-04 {width: 33.33%;}
+.col-05 {width: 41.66%;}
+.col-06 {width: 50%;}
+.col-07 {width: 58.33%;}
+.col-08 {width: 66.66%;}
+.col-09 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+[class*="col-"]
+{
+	float: 					left;
+	/*padding: 				15px;*/
+	border: 				1px solid rgba(1,1,1,0);
+}
+
+.row::after
+{
+	content: 				"";
+	clear: 					both;
+	display: 				table;
+}
+
+
+
+
+
+
